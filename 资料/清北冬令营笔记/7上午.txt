@@ -1,0 +1,265 @@
+cin>>n;
+for (i=1; i<=n; i++) cin>>a[i];
+sort(a+1,a+n+1,cmp);
+cin>>k;
+L=1; R=n;  //k的位置一定在[L,R]中
+while (1)
+{
+  mid=(L+R)/2;
+  if (a[mid]==k) return mid;
+  if (a[mid]<k) L=mid+1; else R=mid-1;
+}
+
+if (n==1)
+  for (...)
+
+if (n==2)
+  for (..)
+    for (..)
+
+if (n==3)
+   ...
+
+
+n=4
+for (a1=0; a1<=2; a1++) // 枚举第一个物品要不要放进背包
+  for (a2=0; a2<=2; a2++)
+    for (a3=0; a3<=2; a3++)  
+      for (a4=0; a4<=2; a4++)
+  if (w[1]*a1+w[2]*a2+w[3]*a3+w[4]*a4<=m)
+    ans=max(ans,c[1]*a1+c[2]*a2+c[3]*a3+c[4]*a4);
+
+
+void dfs(int x)   // 第x重循环
+{
+  if (x==n+1)
+  {
+    int sum=0;  // sum体积之和
+    for (int i=1; i<=n; i++)
+      sum+=a[i]*w[i];
+    if (sum<=m) 
+    {
+       int sumc=0; // sumc价值之和
+       for (int i=1; i<=n; i++) sumc+=a[i]*c[i];
+       ans=max(ans,sumc);
+    }
+    return;
+  }
+  for (a[x]=0; a[x]<=k[x]; a[x]++)
+    dfs(x+1);
+}
+int main()
+{
+  cin>>n>>m;
+  for (i=1; i<=n; i++) cin>>w[i]>>c[i];
+  dfs(1);
+}
+
+给定n个数，求第k大
+从大到小排个序，a[k]就是答案了
+
+n=4
+for (a1=0; a1<=1; a1++) // 枚举第一个数要不要选进子集中
+  for (a2=0; a2<=1; a2++)
+    for (a3=0; a3<=1; a3++)  
+      for (a4=0; a4<=1; a4++)
+        {cnt++; p[cnt]=a1*a[1]+a2*a[2]+a3*a[3]+a4*a[4];}
+sort(p+1,p+cnt+1,cmp);
+p[k];
+
+
+void dfs(int x)   // 第x重循环
+{
+  if (x==n+1)
+  {
+    int sum=0;
+    for (int i=1; i<=n; i++)
+      sum+=a[i]*b[i];
+    p[++cnt]=sum;
+    return;
+  }
+  for (a[x]=0; a[x]<=1; a[x]++)
+    dfs(x+1);
+}
+int main()
+{
+  cin>>n;
+  for (i=1; i<=n; i++)cin>>b[i];
+  dfs(1);
+  sort(p+1,p+cnt+1,cmp);
+  cin>>k; cout<<p[k];
+}
+
+给定n个数，求第k大
+从大到小排个序，a[k]就是答案了  nlgn
+n=1000W  2E
+O(n)
+
+sort
+
+void kp(int l,int r)
+{
+  int mid=a[(l+r)/2];
+  int i=l,j=r;
+  while (i<=j)
+  {
+     while (a[i]<=mid && i<=j) i++;
+     while (a[j]>=mid && i<=j) j--;
+     if (i<=j) {swap(a[i],a[j]); i++; j--;}
+  }
+  if (i<r) kp(i,r);
+  if (l<j) kp(l,j);
+}
+
+a[++i]=?  ->  i++; a[i]=?
+a[i++]  ->  a[i]=?  i++;
+
+
+X=n;
+for (i=1; i<=n; i++)
+{
+  while (X>0 && a[i]+b[X]>p) X--;
+  if (X!=0) ans=max(ans,a[i]+b[X]);
+} 
+
+O(n)
+
+X=n;
+for (i=1; i<=n; i++) e[i]=max(e[i-1],d[i]);
+//e[i]  原先的序列中d[1]~d[i]的最大值是多少
+for (i=1; i<=n; i++)
+{
+  while (X>0 && a[i]+b[X]>p) X--;
+  if (X!=0) ans=max(ans,c[i]+e[X]);
+} 
+cout<<ans;
+
+
+ans=1
+for (i=1; i<=b; i++) ans=ans*a%p;
+cout<<ans;
+
+O(b)
+
+25 = 11001
+
+
+25 = 16+8+1
+
+a^1  a^2  a^4  a^8  a^16
+a    a*a  (a^2)*(a^2)  (a^4)*(a^4)  (a^8)*(a^8)
+
+f[0]=a;
+for (int i=1; i<=4; i++) f[i]=f[i-1]*f[i-1];
+
+// f[0]=a^1  f[1]=a^2  f[2]=a^4  f[3]=a^8  f[4]=a^16
+
+f[0]*f[3]*f[4]  =  a^25
+
+a^1025;
+
+f[10]=a^1024
+
+f[0]*f[10] = a^1025
+
+a^1000000000
+
+100
+
+cin>>a>>b>>p; // a^b % p
+
+// f[i]就是a的2的幂次次，t[i] b分解二进制之后的值
+f[0]=a; ans=1;
+for (int i=1; i<=30; i++) f[i]=f[i-1]*f[i-1]%p;
+for (int i=0; i<=30; i++) {t[i]=b%2; b/=2;}
+for (int i=0; i<=30; i++)
+  if (t[i]) ans=ans*f[i] %p;
+cout<<ans;
+
+int ksm(int a,int b,int p)
+{
+  int ans=1;
+  while (b) {if (b&1) ans=ans*a%p; a=a*a%p; b>>=1;}
+  return ans;
+}
+
+
+分解成十进制
+
+f[0]=a^1   f[1]=a^10  f[2]=a^100  f[3]=a^1000
+f[0]=a;
+for (int i=1; i<=1000000; i++)
+{
+  f[i]=1;
+  for (int j=1; j<=10; j++) f[i]=f[i]*f[i-1]%p;
+}
+
+a^456
+
+(a^100)^4*(a^10)^5*(a^1)^6
+ans=1;
+for (int i=0; i<=1000000; i++)
+  for (int j=1; j<=a[i]; j++)
+    ans=f[i]*ans%p;
+cout<<ans;
+
+
+x  ->  (x+m) % n
+(x+m) % n  ->  (x+2m) % n
+(x+2m) % n ->  (x+3m) % n
+
+k
+
+(x+10^k*m) % n
+
+(x+ksm(10,k,n)*m)%n;
+
+
+(a+b)%n = (a%n+b%n)%n
+
+  a*b%n = a%n*b%n
+
+通过不断的做题总结出基本的贪心策略
+智商碾压
+
+局部最优->全局最优  贪心 
+                    dp
+
+sort(a+1,a+n+1,cmp); ANS=INF;
+
+for (i=2; i<=n; i++)
+if ((n-i)%2==0)
+{
+  ans=0;
+  for (j=i; j<=n; j+=2)
+    ans+=a[2]+a[1]+a[j+1]+a[2];
+
+  for (j=2; j<=i; j++)
+    ans+=a[j]+a[1];
+  cout<<i<<' '<<ans<<endl;
+  ANS=min(ANS,ans);
+} 
+
+int cmp(node i,node j) {return i.r<j.r;}
+
+cin>>n;
+for (i=1; i<=n; i++) cin>>t[i].l>>t[i].r;
+sort(t+1,t+n+1,cmp);
+// MAX 是指之前选择的区间的最大的右端点
+for (i=1; i<=n; i++)
+{
+  if (t[i].l>MAX) sum++,MAX=t[i].r;
+}
+cout<<sum;
+尼克的任务
+
+
+已知代码是错的，并且已知错误数据  ->  找不出错
+          TLE
+
+肉眼检查，跟随程序找到错误
+
+不要在思路混乱的时候写代码
+
+
+

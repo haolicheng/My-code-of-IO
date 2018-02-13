@@ -1,0 +1,91 @@
+KMP
+
+
+abcabcabdc
+abdabc
+
+aabaa 2
+abcabcabc 6
+
+
+next[i]  最长的前缀等于后缀的长度
+
+
+s1[i+1]!=s2[j+1]
+j=nxt[j];
+
+abdabdabc
+abdabc
+000120
+
+
+abdabdabc
+abdabc
+
+
+//s1 长串 L
+//s2 短串 m
+
+j=0;//短串匹配的位置
+for(int i=1;i<=L;i++){
+  while(j&&s2[j+1]!=s1[i]) j=nxt[j];
+    if(s2[j+1]==s1[i]) j++;
+    if(j==m){
+      //
+      j=nxt[j];
+  }
+}
+
+abcabcabcabcabcabc
+
+
+yyyyyabcdedcbaxxxx
+
+以每个位置为中心，找最长的回文半径， 哈希+二分
+
+ababc
+cbaba
+
+维护正着的hash，反着的hash
+nlogn
+
+
+Trie树：
+
+字典树
+
+
+abc
+abb
+ac
+bab
+
+Trie树上最近公共祖先(LCA)为两个串的最长公共前缀LCP
+
+int trie[100005][26]; // root 0
+int tot;
+
+void insert(char s[]){
+	int p=0;
+	for(int i=0;s[i];i++){
+		if(trie[p][s[i]-'a']) p=trie[p][s[i]-'a'];
+		else{
+			p=trie[p][s[i]-'a']=++tot;
+		}
+	}
+}
+
+bool check(char s[]){
+	int p=0;
+	for(int i=0;s[i];i++){
+		if(trie[p][s[i]-'a']) p=trie[p][s[i]-'a'];
+		else{
+			return false;
+		}
+	}
+	return true;
+}
+
+
+
+

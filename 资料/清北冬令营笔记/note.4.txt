@@ -1,0 +1,571 @@
+
+vis[x][y] (x,y)位置是否计算过
+g[x][y] 存储计算过的答案
+
+int h[][];
+int dx[]={0,0,1,-1};
+int dy[]={1,-1,0,0};
+int f(int x,int y){  //在(x,y)位置 最远
+	int mx=1;
+	for(int k=0;k<4;k++){
+		int nx=x+dx[k],ny=y+dy[k];
+		if(nx>=1&&nx<=n && ny >=1 &&ny <=n && h[nx][ny]<h[x][y]){
+			mx=max(mx,f(nx,ny)+1);
+
+		}
+
+	}
+	return mx;
+
+}
+
+// 递推：高度从低到高计算
+
+int dx[]={0,0,1,1,1,-1,-1,-1};
+int dy[]={1,-1,1,-1,0,1,-1,0};
+
+
+
+mod 100
+
+    1
+  10  1
+ 10 98 97
+
+     21
+   20 99 
+ 10 98 97
+
+(x,y)
+
+ mod 100 最大
+ mod 100 能得到什么数字
+
+for(int i=99;i>=0;i--) if(f(1,1,i)){ ans=i;break;}
+
+bool f(int x,int y,int k){// (在第x行y列能不能得到数字k mod 100)
+	if(x==n){
+		return a[x][y]==k;
+	}
+	return f(x+1,y,((k-a[x][y])%100+100)%100) 
+		|| f(x+1,y+1,(k-a[x][y])%100)
+}
+
+bool f[][][];
+for(int i=1;i<=n;i++) f[n][i][a[n][i]]=true;
+
+for(int i=n-1;i>=1;i--){
+	for(int j=1;j<=i;j++){
+		for(int k=0;k<100;k++){
+		f[i][j][k]=
+f[i+1][j][k-a[i][j]] || f[i+1][j+1][k-a[i][j]];
+		}
+	}
+} 
+
+int mx=0;
+for(int i=99;i>=0;i--) if(f[1][1][i]){ ans=i;break;}
+
+# f[i][j]
+f(3,2)
+f(3,2)
+f(3,2)
+# 边界条件
+f[i][j]=a[i][j]+max(f[i+1][j],f[i+1][j+1])
+
+#  阶段
+
+
+
+
+****************
+
+
+在x手里的方案数
+f[i][j] 表示传了i次在j手里方案数
+
+int f(int i,int j){//传了i次在j手里方案数
+	if(i==m && j== 0) return 1;
+	if(i==m && j!= 0) return 0;
+	return f(i+1,j-1)+f(i+1,j+1);
+}
+int ans=f(0,0)
+
+当前状态能转移到哪些状态
+f[i][j]  ->  f[i+1][j-1] f[i+1][j+1]
+
+f[0][0] = 1;
+for(int i=0;i<=m-1;i++){
+	for(int j=0;j<n;j++){
+		f[i+1][j-1]+=f[i][j];
+		f[i+1][j+1]+=f[i][j];
+	}
+}
+
+当前状态可以由哪些状态转移
+f[i][j]  =  f[i-1][j-1] + f[i-1][j+1]
+
+f[0][0] = 1;
+for(int i=1;i<=m;i++){
+	for(int j=0;j<n;j++){
+		f[i][j]=f[i-1][j-1] + f[i-1][j+1];
+	}
+}
+% n
+
+****
+LIS
+
+5
+5 1 4 2 3
+
+5 4
+1 4
+1 2 3
+
+求最长 上升 子序列  长度：
+
+
+f[i] 以i结束的LIS长度
+
+f[i] <- 1+max( f[j]  j<i  a[j]<a[i])
+
+for(int i=1;i<=n;i++){
+	f[i]=1;
+	for(int j=1;j<i;j++){
+		if(a[j]<a[i]) f[i]=max(f[i],1+f[j]);
+	}
+}
+
+O(n^2)
+
+树状数组: 求前缀和，修改单点。
+树状数组优化？
+
+void change(int pos,int w){ // pos位置 和w取max
+  while(pos<=n){
+    a[pos]=max(w,a[pos]);
+    pos+=lowbit(pos);
+  }
+}
+int ask(int pos){ //求前缀max
+  int ret=-inf;
+  while(pos>0){
+      ret=max(ret,a[pos]);
+     pos-=lowbit(pos);
+  }
+	return ret;
+}
+
+树状数组: 求前缀最大值，修改单点（往大里改）。
+
+max(f[j])   a[j]<a[i]: 前缀
+
+一个数组b以a[j]为下标（离散化），值是f[j]。
+求的实际上是 max(b[1],b[2],..b[a[i]-1])
+
+for(int i=1;i<=n;i++){
+	f[i]=1+ask(a[i]-1);
+	change(a[i],f[i]);
+}
+O(nlogn)
+
+
+*******
+LCS
+
+1 4 2 5 7 3  a
+1 3 2 8 7 9  b
+
+最长公共子序列
+
+f[i][j] 第一个串以i结尾，第二个串以j结尾的LCS长度
+
+
+if a[i]!=b[j]   f[i][j]=0
+if a[i]==b[j]   f[i][j]= 1+max(f[x][y]) (x<i y<j)
+for(int i=1;i<=n;i++){
+	for(int j=1;j<=m;j++){
+		if(a[i]==b[j])
+		for(int x=1;x<i;x++){
+			for(int y=1;y<j;y++){
+			f[i][j]= 1+max(f[x][y]);
+			}
+		}
+	}
+}
+O(n^4)
+
+f[i][j] 第一个串以i结尾，第二个串以j结尾的LCS长度
+
+
+f[i][j] 第一个串前i个数字和第二个串前j个数字的LCS
+
+
+1 4 2 5 7 3  a
+1 3 2 8 7 9  b
+
+if a[i]!=b[j]  f[i-1][j]   f[i][j-1] 
+(a[i],b[j]不可能一块取出来)
+
+if a[i]==b[j]  f[i-1][j-1]+1
+
+for(int i=1;i<=n;i++){
+	for(int j=1;j<=m;j++){
+	if(a[i]==b[j]){f[i][j]=f[i-1][j-1]+1}
+	else{f[i][j]=max(f[i-1][j],f[i][j-1])}
+	}
+}
+
+O(n^2)
+
+区间DP
+
+f[l][r] 把l到r沙子合并的最小代价 (r>=l)
+
+之前的两堆分别在 l..k  k+1..r
+f[l][k]+f[k+1][r]+sum(l,r)
+
+f[l][r] = min(f[l][k]+f[k+1][r])+sum(l,r)
+f[i][i] = 0;
+
+for(int i=2;i<=n;i++){ // 区间长度
+	for(int l=1;l<=n;l++){
+		int r=l+i-1;// l..r
+		if(r>n) break;
+		f[l][r]=inf;
+		for(int k=l;k<r;k++){
+			f[l][r] = min(f[l][r],f[l][k]+f[k+1][r]+sum(l,r));
+		}
+	}
+}
+
+n堆沙子 连成一个环，有n个空隙，只合并n-1次，有1个始终没用到
+从这个空隙断开，可以转化成序列问题
+
+
+12345
+23451
+34512
+45123
+51234
+
+1234512345
+
+2n  n
+
+int a[]; // 1..n
+for(int i=1;i<=n;i++) a[i+n]=a[i]; //1..2n
+for(int i=2;i<=n;i++){ // 长度
+	for(int l=1;l<=2*n;l++){
+		int r=l+i-1;
+		///
+	}
+}
+
+int ans=-inf;
+for(int i=1;i<=n;i++) ans=max(ans,f[i][i+n-1]);
+
+
+n=3
+123 0
+132 1
+213 1
+231 2
+312 2
+321 3
+
+k=2
+
+f[i][j] 1~i 逆序对数为j 的方案数
+f[i][j] ->   f[i+1][j+k]  0<=k<=i
+f[i][j] <-   f[i-1][j-p]  0<=p< i
+
+答案是f[n][k]
+
+O(n^3)
+
+f[1][0] = 1
+for(int i=2;i<=n;i++){
+	for(int j=0;j<=k;j++){
+
+		for(int p=0;p<i&&p<=j;p++){
+			f[i][j]+=f[i-1][j-p];
+		}
+	}
+}
+P1006 传纸条
+
+3 3
+0 3 9
+2 8 5 
+5 7 0
+
+   0
+  2 3
+ 5 8 9
+  7 5 5
+   0 3
+    1
+同时找两条路径
+f[i][j][k] 
+在第i行，分别在j列和k列的路径和最大值
+走了i步，第一条路径在j，第二条路径在k的路径和最大值
+
+f[i][j][k] =max( a[i][j]+a[i][k]+f[i-1][j'][k'])  j'!=k'
+
+*******
+《背包九讲》
+
+wi/vi
+
+1. 贪心 
+2. 贪心
+
+体积  价值
+8     90
+5     50
+
+背包体积：10
+
+背包使用体积
+当前考虑到哪个物品
+
+f[i][j]  前i个物品，使用j体积 的最大价值
+f[i][j] +k*w[i+1] -> f[i+1][j+k*v[i]]
+f[i][j]= max(f[i-1][j-k*v[i]]+k*w[i])
+O(nVV)
+
+f[i][j] <- f[i][j-v[i]]+w[i]  f[i-1][j]
+O(nV)
+j从小到大
+
+f[j] <- f[j-v[i]]+w[i]
+O(nV)  space: O(V)
+j从小到大
+
+for(int i=1;i<=n;i++){
+	for(int j=v[i];j<=V;j++){
+		f[j]=max(f[j],f[j-v[i]]+w[i]);
+	}
+}
+
+01
+
+f[i][j]  前i个物品，使用j体积 的最大价值
+f[i][j]= max(f[i-1][j-v[i]]+w[i])  f[i-1][j]
+O(nV)
+
+f[j] = max(f[j],f[j-v[i]]+w[i])
+j 从大到小循环
+
+多重背包
+1） 每个物品拆成ai个物品 进行01背包
+2)  二进制拆分 1 2 4 8 16 ...2^k r
+r=ai-sum(1,2,4...)
+
+
+11    0 1 .. 11
+1)  1 1 1 1 1 1 1 1     ai
+2)  1 2 4 4     log(ai)
+
+0 0
+1 1
+2 2
+3 1+2
+4 4
+5 1+4
+6 2+4
+7 1+2+4
+8 4+4
+9 1+4+4
+10 2+4+4
+11
+
+
+
+1
+10
+100
+1000
+
+101101
+
+111111  = 2^k -1
+
+1~2^k -1
+
+ai - 2^k +1
+
+for(int i=1;i<=n;i++){
+	int t=a[i];
+	for(int j=1;t-j>=0;j*=2){
+		int nv=v[i]*j;
+		int nw=w[i]*j
+		// nv,nw的01背包
+
+	}
+	int nv = v[i]*t;
+	int nw = w[i]*t;
+	// nv,nw的01背包
+}
+
+n*log(ai)*V
+
+noip2014 飞扬的小鸟
+P1941
+
+
+树上动态规划：
+
+以子树为阶段：
+f[i][0/1] 以i为根子树/ 0/1表示根是否选中
+ 最多选出多少个节点
+
+
+1) 把根选了 f[i][1] =1+ sum ( max(f[j][0]))  j是i的孩子 直接有边相连
+2) 没选根 f[i][0] = sum ( max(f[j][0],f[j][1]))   j是i的孩子 直接有边相连
+
+
+**************
+RMQ
+
+1 4 2 5 3
+a
+
+n
+
+int st[n][log(n)];
+
+st[i][j]
+从i开始长度为2^j的最大值
+max(a[i],a[i+1],..,a[i+2^j -1])
+
+st[i][0]=a[i]
+st[i][j]=max(st[i][j-1],st[i+2^(j-1)][j-1])
+
+O(nlogn)
+
+L..R
+
+O(1)
+
+for(int i=1;i<=n;i++) st[i][0]=a[i];
+for(int j=1;j<=20;j++) for(int i=1;i+(1<<j)-1<=n;i++)st[i][j]=max(st[i][j-1],st[i+(1<<(j-1))][j-1]);
+
+#include<cmath>
+
+log2() // k
+
+int ask(int L,int R){
+	int k=log2(R-L+1); // O(1)
+	return max(st[L][k],st[R-(1<<k)+1][k]);
+}
+
+**********
+
+线段树
+
+
+O(log(n))个区间覆盖L~R信息
+每层最多选两个区间
+
+区间最大值
+
+int n;
+int a[];
+int mx[];
+// 当前节点编号，当前表示的区间范围
+void build(int o,int l,int r){
+	if(l==r){
+		mx[o] = a[l];
+	}else{
+		int mid=(l+r)/2;
+		build(o*2,l,mid);
+		build(o*2+1,mid+1,r);
+		mx[o]=max(mx[o*2],mx[o*2+1]);
+	}
+}
+build(1,1,n)
+
+// o结点编号，l,r线段树的区间，L,R查询的区间
+int ask(int o,int l,int r,int L,int R){
+	if(l==L&&r==R){
+		return mx[o];
+	}else{
+
+	down(o);
+		int mid=(l+r)/2;
+	if(R<=mid) return ask(o*2,l,mid,L,R);
+	else if(L>mid)return ask(o*2+1,mid+1,r,L,R);
+	else return max(ask(o*2,l,mid,L,mid),
+			ask(o*2+1,mid+1,r,mid+1,R))
+		
+	}
+}
+ask(1,1,n,L,R);
+
+
+// 单点修改
+// l,r线段树节点表示的区间，pos修改位置，w新的值
+void modify(int o,int l,int r,int pos,int w){
+	if(l==r){
+		mx[o] = w;
+	}else{
+
+	down(o);
+		int mid=(l+r)/2;
+		if(pos<=mid){
+			//左边
+			modify(o*2,l,mid,pos,w);
+		}else{
+			//右边
+			modify(o*2+1,mid+1,r,pos,w);
+		}
+		mx[o]=max(mx[o*2],mx[o*2+1]);//快速合并
+	}
+}
+
+
+
+1 4 2 1 3
+
+// 信息需要支持快速合并
+
+
+// 新操作： 给位置在L~R的数字+x
+Lazy 思想
+如果一个区间被区间修改操作整个覆盖：
+不用递归修改，建立一个lazy标记
+如果真正访问下面节点，再下放标记
+// o, l,r表示当前区间，L,R表示要修改的区间,表示要加的值
+int lazy[];//存放标记
+void down(int o){
+	if(lazy[o]!=0){
+		mx[o*2]+=lazy[o];
+		mx[o*2+1]+=lazy[o];
+		lazy[o*2]+=lazy[o];
+		lazy[o*2+1]+=lazy[o];
+		//清空标记
+		lazy[o]=0;
+	}
+}
+void add(int o,int l,int r,int L,int R,int w){
+	if(l==L&&r==R){
+		mx[o]+=w;
+		lazy[o]+=w;//对于子区间来说没有下放的标记
+	}else{
+	//下放标记
+	down(o);
+	int mid=(l+r)/2;
+	if(R<=mid) add(o*2,l,mid,L,R,w);//左
+	else if(L>mid) add(o*2+1,mid+1,r,L,R,w);//右
+	else{
+		add(o*2,l,mid,L,mid,w);
+		add(o*2+1,mid+1,r,mid+1,R,w));
+		}
+	}
+	mx[o]=max(mx[o*2],mx[o*2+1]);
+}
+
+

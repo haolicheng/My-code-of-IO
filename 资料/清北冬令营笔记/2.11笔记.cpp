@@ -58,9 +58,9 @@ int main(){
 	cin>>n>>m;
 	for(int i=1;i<=m;i++){
 		cin>>x>>y;
-		
+
 		add(x,y);
-		
+
 		a[x][y]+=1;
 	}
 	bfs();
@@ -74,9 +74,9 @@ int main(){
 		for(int j=1;j<=n;j++)g[i][j]=1000000000;
 	for(int i=1;i<=m;i++){
 		cin>>x>>y>>z;
-		
+
 		add(x,y,z);
-		
+
 		g[x][y]=min(g[x][y],z);
 	}
 	//读入操作
@@ -89,7 +89,7 @@ int main(){
 			if(vis[j]==0 && (t==-1 || dis[j]<dis[t]))t=j;
 		vis[t]=1;
 		for(int j=1;j<=n;j++)
-			if(vis[j]==0)		
+			if(vis[j]==0)
 				dis[j]=min(dis[j],dis[t]+g[t][j]);
 				//松弛操作
 	}
@@ -137,13 +137,13 @@ int main(){
 
 	for(int i=1;i<=m;i++){
 		cin>>x>>y>>z;
-		
+
 		add(x,y,z);
-		
+
 		g[x][y]=min(g[x][y],z);
 	}
 	spfa();
-	
+
 }
 //floyd
 int main(){
@@ -223,10 +223,10 @@ int main(){
 //拓扑排序
 int main(){
 	cin>>n>>m;
-	
+
 	for(inti=1;i<=m;i++){
 		cin>>x>>y;
-		
+
 		add(x,y);
 		du[y]++;
 		//g[x][y]=1;
@@ -273,7 +273,7 @@ intlca(intx,int y){
 }
 int main(){
 	cin>>n;
-	
+
 	for(inti=1;i<n;i++)
 		add(read(),read());
 	dep[1]=0;
@@ -311,7 +311,7 @@ intlca(intx,int y){
 }
 int main(){
 	cin>>n;
-	
+
 	for(inti=1;i<n;i++)
 		add(read(),read());
 	dep[1]=0;
